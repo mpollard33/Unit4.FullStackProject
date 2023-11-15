@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useDeleteStudentMutation, useEditStudentMutation } from "./studentSlice";
 
-/** Allows user to read, update, and delete a task */
-export default function Student({ task: student }) {
+/** Allows user to read, update, and delete a student */
+export default function Student({ student: student }) {
   const [editStudent] = useEditStudentMutation();
   const [deleteStudent] = useDeleteStudentMutation();
 
   const [description, setDescription] = useState(student.description);
 
   /** Updates the students' status */
-  const toggleStudent = async (e) => {
-    const done = e.target.checked;
-    editStudent({ ...student, done });
-  };
+  // const toggleStudent = async (e) => {
+  //   const done = e.target.checked;
+  //   editStudent({ ...student, done });
+  // };
 
   /** Saves the student's description */
   const save = async (e) => {
