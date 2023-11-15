@@ -1,46 +1,34 @@
-import { useState } from "react";
-import { useDeleteStudentMutation, useEditStudentMutation } from "./studentSlice";
+import React from "react";
+import { useDeleteStudentMutation } from "./studentSlice";
 
-/** Allows user to read, update, and delete a student */
-export default function Student({ student: student }) {
-  const [editStudent] = useEditStudentMutation();
+export default function Student({ student }) {
+  if (!student) {
+    return <div>Error: Student data missing</div>;
+  }
   const [deleteStudent] = useDeleteStudentMutation();
 
-  const [description, setDescription] = useState(student.description);
-
-  /** Updates the students' status */
-  // const toggleStudent = async (e) => {
-  //   const done = e.target.checked;
-  //   editStudent({ ...student, done });
-  // };
-
-  /** Saves the student's description */
-  const save = async (e) => {
-    e.preventDefault();
-    editStudent({ ...student, description });
-  };
-
-  /** Deletes the student */
   const onDelete = async (e) => {
     e.preventDefault();
     deleteStudent(student.id);
   };
 
+  console.log("Student Data:", student);
+
   return (
     <li>
-      <form onSubmit={save}>
-        <input type="checkbox" checked={student.done} onChange={toggleStudent} />
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <button>Save</button>
-        <button onClick={onDelete} aria-label="delete">
-          🞪
-        </button>
-      </form>
+      <div>
+        <h1>
+          {student.firstName} {student.lastName}
+        </h1>
+        <img src={student.imgUrl} />
+        <p>GPA: {parseFloat(student.gpa)}</p>
+        {/* <p>First Name: {student.firstName}</p>
+        <p>Last Name: {student.lastName}</p> */}
+        <p>Email: {student.email}</p>
+      </div>
+      <div>
+        <button onClick={onDelete}>🞪</button>
+      </div>
     </li>
   );
 }

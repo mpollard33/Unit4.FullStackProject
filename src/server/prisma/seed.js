@@ -1,23 +1,15 @@
+// seed.js
+
 const prisma = require("../prisma");
 
-/** Seeds the database with a user and some tasks */
 const seed = async () => {
-  await prisma.user.upsert({
-    where: {
-      username: "foo",
-    },
-    update: {},
-    create: {
-      username: "foo",
-      password: "bar",
-      tasks: {
-        create: [
-          { description: "task 1" },
-          { description: "task 2" },
-          { description: "task 3" },
-        ],
-      },
-    },
+  // Seed students to database
+  await prisma.student.createMany({
+    data: [
+      { firstName: "Ted", lastName: "Williams", email: "ted.williams@gmail.com", gpa: 3.5 },
+      { firstName: "Alice", lastName: "Johnson", email: "alice.johnson@gmail.com", gpa: 3.2 },
+      { firstName: "Bob", lastName: "Smith", email: "bob.smith@gmail.com", gpa: 3.7 },
+    ],
   });
 };
 
