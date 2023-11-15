@@ -1,35 +1,35 @@
 import { useState } from "react";
-import { useDeleteTaskMutation, useEditTaskMutation } from "./taskSlice";
+import { useDeleteStudentMutation, useEditStudentMutation } from "./studentSlice";
 
 /** Allows user to read, update, and delete a task */
-export default function Task({ task }) {
-  const [editTask] = useEditTaskMutation();
-  const [deleteTask] = useDeleteTaskMutation();
+export default function Student({ task: student }) {
+  const [editStudent] = useEditStudentMutation();
+  const [deleteStudent] = useDeleteStudentMutation();
 
-  const [description, setDescription] = useState(task.description);
+  const [description, setDescription] = useState(student.description);
 
-  /** Updates the task's `done` status */
-  const toggleTask = async (evt) => {
-    const done = evt.target.checked;
-    editTask({ ...task, done });
+  /** Updates the students' status */
+  const toggleStudent = async (e) => {
+    const done = e.target.checked;
+    editStudent({ ...student, done });
   };
 
-  /** Saves the task's description */
-  const save = async (evt) => {
-    evt.preventDefault();
-    editTask({ ...task, description });
+  /** Saves the student's description */
+  const save = async (e) => {
+    e.preventDefault();
+    editStudent({ ...student, description });
   };
 
-  /** Deletes the task */
-  const onDelete = async (evt) => {
-    evt.preventDefault();
-    deleteTask(task.id);
+  /** Deletes the student */
+  const onDelete = async (e) => {
+    e.preventDefault();
+    deleteStudent(student.id);
   };
 
   return (
     <li>
       <form onSubmit={save}>
-        <input type="checkbox" checked={task.done} onChange={toggleTask} />
+        <input type="checkbox" checked={student.done} onChange={toggleStudent} />
         <input
           type="text"
           value={description}
