@@ -21,7 +21,7 @@ const createApp = async () => {
   app.use(express.urlencoded({ extended: true }));
 
   // API routes
-  app.use("/", require("./api"));
+  app.use("/students", require("./api"));
 
   // Serve static HTML in production & Vite dev server in development
   if (process.env.NODE_ENV === "production") {

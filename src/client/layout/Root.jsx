@@ -8,14 +8,13 @@ import NewStudent from "../features/students/NewStudent";
 
 export default function Root() {
   return (
-    // Remove BrowserRouter from here
     <div>
       <Navbar />
       <Routes>
         <Route path="/" element={<AuthForm />} />
         <Route path="/students" element={<AllStudents />} />
-        <Route path="/login" element={<AuthForm />} />
-        <Route path="/NewStudent" element={<NewStudent />} />
+        {/* <Route path="/login" element={<AuthForm />} /> */}
+        {/* <Route path="/NewStudent" element={<NewStudent />} /> */}
       </Routes>
     </div>
   );

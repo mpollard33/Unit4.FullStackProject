@@ -24,8 +24,8 @@ export default function AuthForm() {
     useRegisterMutation();
 
   /** Send the requested authentication action to the API */
-  const attemptAuth = async (evt) => {
-    evt.preventDefault();
+  const attemptAuth = async (e) => {
+    e.preventDefault();
 
     const authMethod = isLogin ? login : register;
     const credentials = { username, password };
