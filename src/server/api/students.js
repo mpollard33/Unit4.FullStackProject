@@ -4,7 +4,7 @@ const prisma = require("../prisma");
 const router = require("express").Router();
 module.exports = router;
 
-/** User must be logged in to access tasks. */
+/** User must be logged in to access students. */
 router.use((req, res, next) => {
   if (!res.locals.user) {
     return next(new ServerError(401, "You must be logged in."));
@@ -12,92 +12,98 @@ router.use((req, res, next) => {
   next();
 });
 
-/** Sends all tasks */
+/** Sends all students */
 router.get("/", async (req, res, next) => {
   try {
-    const tasks = await prisma.task.findMany({
+    const students = await prisma.student.findMany({
       where: { userId: res.locals.user.id },
     });
-    res.json(tasks);
+    res.json(students);
   } catch (err) {
     next(err);
   }
 });
 
-/** Creates new task and sends it */
+/** Creates new student and sends it */
 router.post("/", async (req, res, next) => {
   try {
-    const { description, done } = req.body;
-    if (!description) {
-      throw new ServerError(400, "Description required.");
+    const { firstName, lastName, email, imageUrl, gpa } = req.body;
+    if (!firstName || !lastName || !email) {
+      throw new ServerError(
+        400,
+        "First name, last name, and email are required."
+      );
     }
 
-    const task = await prisma.task.create({
+    const student = await prisma.student.create({
       data: {
-        description,
-        done: done ?? false,
+        firstName,
+        lastName,
+        email,
+        imageUrl: imageUrl || "defaultImg",
+        gpa: gpa || 0.0,
         user: { connect: { id: res.locals.user.id } },
       },
     });
-    res.json(task);
+    res.json(student);
   } catch (err) {
     next(err);
   }
 });
 
-/** Checks if task exists and belongs to given user */
-const validateTask = (user, task) => {
-  if (!task) {
-    throw new ServerError(404, "Task not found.");
+/** Checks if student exists and belongs to the given user */
+const validateStudent = (user, student) => {
+  if (!student) {
+    throw new ServerError(404, "Student not found.");
   }
 
-  if (task.userId !== user.id) {
-    throw new ServerError(403, "This task does not belong to you.");
+  if (student.userId !== user.id) {
+    throw new ServerError(403, "Permission denied.");
   }
 };
 
-/** Sends single task by id */
+/** Sends a single student by id */
 router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const task = await prisma.task.findUnique({ where: { id } });
-    validateTask(res.locals.user, task);
+    const student = await prisma.student.findUnique({ where: { id } });
+    validateStudent(res.locals.user, student);
 
-    res.json(task);
+    res.json(student);
   } catch (err) {
     next(err);
   }
 });
 
-/** Updates single task by id */
+/** Updates a single student by id */
 router.put("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
-    const { description, done } = req.body;
+    const { firstName, lastName, email, imageUrl, gpa } = req.body;
 
-    const task = await prisma.task.findUnique({ where: { id } });
-    validateTask(res.locals.user, task);
+    const student = await prisma.student.findUnique({ where: { id } });
+    validateStudent(res.locals.user, student);
 
-    const updatedTask = await prisma.task.update({
+    const updatedStudent = await prisma.student.update({
       where: { id },
-      data: { description, done },
+      data: { firstName, lastName, email, imageUrl, gpa },
     });
-    res.json(updatedTask);
+    res.json(updatedStudent);
   } catch (err) {
     next(err);
   }
 });
 
-/** Deletes single task by id */
+/** Deletes a single student by id */
 router.delete("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const task = await prisma.task.findUnique({ where: { id } });
-    validateTask(res.locals.user, task);
+    const student = await prisma.student.findUnique({ where: { id } });
+    validateStudent(res.locals.user, student);
 
-    await prisma.task.delete({ where: { id } });
+    await prisma.student.delete({ where: { id } });
     res.sendStatus(204);
   } catch (err) {
     next(err);
