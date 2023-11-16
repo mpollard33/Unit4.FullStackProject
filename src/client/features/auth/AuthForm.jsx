@@ -2,37 +2,39 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation, useRegisterMutation } from "./authSlice";
 
-/** This form allows users to register or log in. */
+/* This form allows users to register or log in. */
 export default function AuthForm() {
   const navigate = useNavigate();
 
-  // Handles swapping between login and register
+  /* Handles swapping between login and register */
   const [isLogin, setIsLogin] = useState(true);
   const authAction = isLogin ? "Login" : "Register";
   const altCopy = isLogin
     ? "Need an account? Register here."
     : "Already have an account? Login here.";
 
-  // Controlled form fields
+  /* Controlled form fields */
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // Form submission
+  /* Form submission */
   const [login, { isLoading: loginLoading, error: loginError }] =
     useLoginMutation();
   const [register, { isLoading: registerLoading, error: registerError }] =
     useRegisterMutation();
 
-  /** Send the requested authentication action to the API */
+  /*
+   * Send the requested authentication action to the API
+   */
   const attemptAuth = async (e) => {
     e.preventDefault();
 
     const authMethod = isLogin ? login : register;
     const credentials = { username, password };
 
-    // We don't want to navigate if there's an error.
-    // `unwrap` will throw an error if there is one
-    // so we can use a try/catch to handle it.
+    /* We don't want to navigate if there's an error.
+       `unwrap` will throw an error if there is one,
+       so we can use a try/catch to handle it. */
     try {
       await authMethod(credentials).unwrap();
       navigate("/");
@@ -54,6 +56,7 @@ export default function AuthForm() {
             autoComplete="username"
           />
         </label>
+
         <label>
           Password
           <input
@@ -63,13 +66,23 @@ export default function AuthForm() {
             autoComplete="current-password"
           />
         </label>
+
         <button>{authAction}</button>
       </form>
+
+      {/* Toggle between login and register */}
       <a onClick={() => setIsLogin(!isLogin)}>{altCopy}</a>
 
+      {/* Loading and error messages */}
       {(loginLoading || registerLoading) && <p>Please wait...</p>}
-      {loginError && <p role="alert">{loginError}</p>}
-      {registerError && <p role="alert">{registerError}</p>}
+
+      {/* Display login and register errors */}
+      {loginError && loginError.error && (
+        <p role="alert">{loginError.error.message}</p>
+      )}
+      {registerError && registerError.error && (
+        <p role="alert">{registerError.error.message}</p>
+      )}
     </>
   );
 }

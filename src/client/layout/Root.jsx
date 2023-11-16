@@ -13,7 +13,7 @@ export default function Root() {
       <Routes>
         <Route path="/" element={<AuthForm />} />
         <Route path="/students" element={<AllStudents />} />
-        {/* <Route path="/login" element={<AuthForm />} /> */}
+        <Route path="/login" element={<AuthForm />} />
         {/* <Route path="/NewStudent" element={<NewStudent />} /> */}
       </Routes>
     </div>

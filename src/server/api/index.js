@@ -27,4 +27,6 @@ router.use(async (req, res, next) => {
 });
 
 router.use("/auth", require("./auth"));
+// router.use("/login", require("./auth"));
+
 router.use("/students", require("./students"));
